@@ -75,18 +75,22 @@ class BookController extends Controller
      */
     public function destroy($id)
     {
-        return Book::destroy($id);
+        $result = Book::destroy($id);
+        if($result == 1){
+            return "Book " . $id . " deleted.";
+        }
+        else return "Error";
     }
     /**
      * Search for title
      *
-     * @param  string $title
+     * @param  string $query
      * @return Response
      */
-    public function search($title)
+    public function search($query)
     {
-        //return Book::where('title', 'like' ,'%'.$title.'%')->get();
-        return Book::where('title', 'like' , sprintf('%%%s%%', $title))->paginate(2);
+        return Book::where('title', 'like' ,'%'.$query.'%')->orWhere('author','like','%'.$query.'%')->get();
+        //return Book::where('title', 'like' , sprintf('%%%s%%', $title))->paginate(2);
     }
 
 
