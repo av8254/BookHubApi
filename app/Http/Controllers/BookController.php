@@ -85,7 +85,8 @@ class BookController extends Controller
      */
     public function search($title)
     {
-        return Book::where('title', 'like' ,'%'.$title.'%')->get();
+        //return Book::where('title', 'like' ,'%'.$title.'%')->get();
+        return Book::where('title', 'like' , sprintf('%%%s%%', $title))->paginate(2);
     }
 
 
