@@ -21,10 +21,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+
         $users = User::factory(10)->create();
+        $admin = User::factory()->create([
+            'first_name' => 'administrator',
+            'last_name' => 'administrator',
+            'email' => 'admin@mail.com',
+            'password' => bcrypt('123456'),
+        ]);
+
         Book::factory(50)->create();
         Rating::factory(200)->create();
-        Following::factory(10)->create();
+        Following::factory(100)->create();
         $collections = Collection::factory(20)->create();
 
         $collections->each(function ($collection) {
@@ -35,13 +43,6 @@ class DatabaseSeeder extends Seeder
             $books = Book::factory(10)->create();
             $user->books()->attach($books, ['status' => 'Reading']);
         });
-
-        $admin = User::factory()->create([
-            'first_name' => 'administrator',
-            'last_name' => 'administrator',
-            'email' => 'admin@mail.com',
-            'password' => bcrypt('123456'),
-        ]);
 
         $books = Book::factory(10)->create();
         $admin->books()->attach($books, ['status' => 'Reading']);
