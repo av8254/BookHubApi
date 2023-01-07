@@ -19,7 +19,6 @@ class CollectionFactory extends Factory
         return [
             'user_id' => $this->faker->numberBetween(1,10),
             'name' => $this->faker->sentence(3),
-            'description' => $this->faker->paragraph(2),
         ];
     }
 }

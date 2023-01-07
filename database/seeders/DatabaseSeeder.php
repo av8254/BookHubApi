@@ -21,10 +21,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        User::factory(10)->create();
+        $users = User::factory(10)->create();
         Book::factory(50)->create();
         Rating::factory(200)->create();
-        Comment::factory(200)->create();
         Following::factory(10)->create();
         $collections = Collection::factory(20)->create();
 
@@ -32,13 +31,23 @@ class DatabaseSeeder extends Seeder
             $books = Book::factory(5)->create();
             $collection->books()->attach($books);
         });
+        $users->each(function ($user) {
+            $books = Book::factory(10)->create();
+            $user->books()->attach($books, ['status' => 'Reading']);
+        });
 
-        User::factory()->create([
+        $admin = User::factory()->create([
             'first_name' => 'administrator',
             'last_name' => 'administrator',
             'email' => 'admin@mail.com',
             'password' => bcrypt('123456'),
         ]);
+
+        $books = Book::factory(10)->create();
+        $admin->books()->attach($books, ['status' => 'Reading']);
+        $books = Book::factory(5)->create();
+        $admin->books()->attach($books, ['status' => 'To be read']);
+
 
 
 

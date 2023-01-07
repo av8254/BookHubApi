@@ -52,9 +52,24 @@ class User extends Authenticatable
         return $this->hasMany(Rating::class, 'user_id');
     }
 
-    public function comments()
+    public function books()
     {
-        return $this->hasMany(Comment::class, 'user_id');
+        return $this->belongsToMany(Book::class, 'user_book');
+    }
+
+    public function collections()
+    {
+        return $this->hasMany(Collection::class, 'user_id');
+    }
+
+    public function followings()
+    {
+        return $this->hasMany(Following::class, 'follower_id');
+    }
+
+    public function followers()
+    {
+        return $this->hasMany(Following::class, 'following_id');
     }
 
 }

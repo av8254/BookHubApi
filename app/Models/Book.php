@@ -46,4 +46,9 @@ class Book extends Model
         return $this->belongsToMany(Collection::class, 'book_collection');
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_book');
+    }
+
 }

@@ -18,6 +18,7 @@ class RatingFactory extends Factory
     {
         return [
             'rating' => $this->faker->randomElement([1,2,3,4,5]),
+            'comment' => $this->faker->sentence(3),
             'user_id' => $this->faker->numberBetween(1,10),
             'book_id' => $this->faker->numberBetween(1,50)
         ];

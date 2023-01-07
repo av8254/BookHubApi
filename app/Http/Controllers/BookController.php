@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -47,10 +48,93 @@ class BookController extends Controller
         return Book::find($id);
 
     }
+    public function addBook(Request $request, int $id)
+    {
+        $validatedData = $request->validate([
+            'status' => 'required|string',
+        ]);
+
+        $user = auth()->user();
+
+        // Check if the user has already added the book
+        $userBook = $user->books()->wherePivot('book_id', $id)->first();
+
+        if ($userBook) {
+            // The user has already added the book
+            return response()->json([
+                'error' => 'You have already added this book.',
+            ], 400);
+        } else {
+            // Add the book to the user's account
+            $user->books()->attach($id, ['status' => $validatedData['status']]);
+
+            if ($request->has('rating')) {
+                $user->ratings()->create([
+                    'book_id' => $id,
+                    'rating' => $request['rating'],
+                    'comment' => $request['comment'],
+                ]);
+            }
+
+            // Return a success response
+            return response()->json([
+                'message' => 'Book added to your account successfully.',
+            ], 201);
+        }
+    }
+
+    public function updateBook(Request $request, int $id)
+    {
+        // Validate the request
+        $validatedData = $request->validate([
+            'status' => 'required|string',
+        ]);
+
+        $user = auth()->user();
+
+        $user->books()->updateExistingPivot($id, ['status' => $validatedData['status']]);
+
+        return response()->json([
+            'message' => 'Book updated successfully.',
+        ], 200);
+    }
+
+    public function getReadingBooks()
+    {
+        $user = auth()->user();
+
+        return $user->books()->wherePivot('status', 'Reading')->get();
+//
+//        return response()->json([
+//            'data' => $readingBooks,
+//        ], 200);
+    }
+
+    public function getToBeReadBooks()
+    {
+        $user = auth()->user();
+
+        return $user->books()->wherePivot('status', 'To be read')->get();
+    }
+
+    public function removeBook(int $id)
+    {
+        $user = auth()->user();
+
+        $user->books()->detach($id);
+
+        return response()->json([
+            'message' => 'Book removed from your account successfully.',
+        ], 200);
+    }
 
     public function get_ratings($id)
     {
         return Book::find($id)->ratings()->get();
+    }
+    public function get_collections($id)
+    {
+        return Book::find($id)->collections()->get();
     }
 
     /**

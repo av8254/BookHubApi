@@ -15,7 +15,7 @@ class AuthController extends Controller
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'email' => 'required|string|unique:users,email',
-            'password' => 'required|string|confirmed'
+            'password' => 'required|string'
         ]);
 
         $user = User::create([
@@ -80,30 +80,40 @@ class AuthController extends Controller
 
         $validatedData = $request->validate([
             'first_name' => [
-                'required',
                 'max:16',
                 Rule::unique('users')->ignore(auth()->id())],
             'last_name' => [
-                'required',
                 'max:16',
                 Rule::unique('users')->ignore(auth()->id())],
             'email' => [
-                'required',
                 'email',
                 'max:40',
                 Rule::unique('users')->ignore(auth()->id())],
-            'password' => 'nullable|min:6|confirmed',
+            'password' => 'nullable|min:6',
         ]);
 
-        if ($validatedData['password']) {
-            $validatedData['password'] = bcrypt($validatedData['password']);
-        } else {
-            unset($validatedData['password']);
+        if(isset($validatedData['password'])) {
+            if ($validatedData['password']) {
+                $validatedData['password'] = bcrypt($validatedData['password']);
+            } else {
+                unset($validatedData['password']);
+            }
         }
+
         //update user
         auth()->user()->update($validatedData);
 
         return auth()->user();
     }
+
+    public function getFollowers()
+    {
+        return auth()->user()->followers()->get();
+    }
+    public function getFollowings()
+    {
+        return auth()->user()->followings()->get();
+    }
+
 
 }
