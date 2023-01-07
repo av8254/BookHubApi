@@ -69,6 +69,12 @@ class AuthController extends Controller
         ];
     }
 
+    public function getUser(){
+
+        return auth()->user();
+
+    }
+
     public function update(Request $request)
     {
 

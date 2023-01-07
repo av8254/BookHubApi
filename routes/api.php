@@ -38,6 +38,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/books/reading/{id}', [BookController::class, 'updateBook']);
     Route::delete('/books/reading/{id}', [BookController::class, 'removeBook']);
     Route::get('/users/reading', [BookController::class, 'getReadingBooks']);
+    Route::get('/user', [AuthController::class, 'getUser']);
     Route::get('/users/toberead', [BookController::class, 'getToBeReadBooks']);
     Route::get('/users/collections', [CollectionController::class, 'user_collections']);
     Route::get('/books', [BookController::class, 'index']);
