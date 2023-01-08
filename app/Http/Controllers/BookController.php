@@ -7,6 +7,7 @@ use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class BookController extends Controller
 {
@@ -28,13 +29,20 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'title' => 'required',
             'author' => 'required',
-            'description' => 'required'
+            'description' => 'required',
+            'tags' => 'required',
+            'image' => 'image|mimes:jpg,png,jpeg'
         ]);
 
-        return Book::create($request->all());
+        if($request->hasFile('image')) {
+            $path = $request->file('image')->store('public/images');
+            $validatedData['image'] = asset(Storage::url($path));
+        }
+
+        return Book::create($validatedData);
     }
 
     /**
@@ -48,6 +56,7 @@ class BookController extends Controller
         return Book::find($id);
 
     }
+
     public function addBook(Request $request, int $id)
     {
         $validatedData = $request->validate([

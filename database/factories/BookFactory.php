@@ -20,7 +20,8 @@ class BookFactory extends Factory
             'title' => $this->faker->sentence(3),
             'tags' => $this->faker->word,
             'description' => $this->faker->paragraph(5),
-            'author' => fake()->name()
+            'author' => fake()->name(),
+            'image' => asset('storage/images/' . $this->faker->randomElement(['book1.png','book2.png','book3.png']))
         ];
     }
 }

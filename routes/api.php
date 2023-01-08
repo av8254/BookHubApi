@@ -48,6 +48,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/following/followings', [AuthController::class, 'getFollowings']);
     Route::get('/following/followers', [AuthController::class, 'getFollowers']);
     Route::put('/users/editprofile', [AuthController::class, 'update']);
+    Route::get('/books/{id}/img', [BookController::class, 'returnImg']);
 });
 
 
